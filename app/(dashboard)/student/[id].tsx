@@ -16,7 +16,6 @@ import { useAuth } from "@/context/AuthContext";
 import  {Student} from "@/types/student";
 import { registerStudentInFirestore, updateStudent, getStudent } from "@/services/studentService";
 import Header from "@/components/header";
-import SendStudentEmailWebView from "@/components/SendStudentEmailWebView";
 import { validateStudent } from "@/util/validation";
 import { useInstitute } from "@/context/InstituteContext";
 
@@ -81,8 +80,7 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
       setLoading(true);
 
       if (isNew) {
-        const savedStudent = await registerStudentInFirestore(studentData, institute?.instituteName || '');
-        // await setStudentRegistered(savedStudent); // triggers EmailJS WebView
+        await registerStudentInFirestore(studentData, institute?.instituteName || '');
         Alert.alert("Success", "Student added successfully");
       } else {
         await updateStudent(id as string, studentData);
@@ -219,18 +217,7 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-
-      {/* Trigger EmailJS WebView */}
-      {studentRegistered && (
-        <SendStudentEmailWebView
-          email={studentRegistered.email}
-          studentId={studentRegistered.id ?? ""}
-          studentName={studentRegistered.name}
-          instituteName={user?.displayName || "Your Institute"}
-          onSuccess={() => console.log("Email sent successfully")}
-          onError={(err) => console.error("Email failed:", err)}
-        />
-      )}
+      
     </View>
   );
 };

@@ -65,7 +65,7 @@ const StudentPage = () => {
   // Filter students based on search query
   const filteredStudents = students.filter(student =>
     student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    // student.id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    student.id?.toLowerCase().includes(searchQuery.toLowerCase()) ||
     student.email.toLowerCase().includes(searchQuery.toLowerCase())
   )
 
