@@ -10,7 +10,7 @@ import { db } from '@/firebase'
 
 const StudentPage = () => {
   const router = useRouter()
-  const { user } = useAuth() // get logged-in user
+  const {user} = useAuth() // get logged-in user
   const [searchQuery, setSearchQuery] = useState('')
   const [students, setStudents] = useState<Student[]>([])
   const [loading, setLoading] = useState(false)

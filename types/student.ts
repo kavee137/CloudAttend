@@ -5,5 +5,5 @@ export interface Student {
   phone: string
   address: string
   status: string
-  instituteId?: string
+  instituteId: string
 }
