@@ -20,47 +20,50 @@ import { validateStudent } from "@/util/validation";
 import { useInstitute } from "@/context/InstituteContext";
 
 
-const AddUpdateStudent = ({ isUpdate = false }) => {
+const AddUpdateStudent = () => {
   const router = useRouter();
   const { user } = useAuth();
   const { institute } = useInstitute();
-  const { id } = useLocalSearchParams<{ id?: string }>();
-  const isNew = !isUpdate || !id || id === "new";
+  const { id } = useLocalSearchParams<{ id?: string }>()
+  let isNew = !id || id === "new"
+  console.log("isNew:", isNew, "id:", id);
 
   const [loading, setLoading] = useState(false);
-  const [studentRegistered, setStudentRegistered] = useState<Student | null>(null);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
-  const [status, setStatus] = useState<"active" | "inactive">("active");
+  const [status, setStatus] = useState<string>("active");
 
   // Load student data if updating
   useEffect(() => {
-    if (!isUpdate || !id) return;
-    let isMounted = true;
+    if (isNew || !id) return;
 
     const loadStudent = async () => {
+      console.log("Loading student with ID:", id);
       setLoading(true);
       try {
-        const student = await getStudent(id);
-        if (student && isMounted) {
+        const student = await getStudent(id as string);
+        if (student) {
           setName(student.name ?? "");
           setEmail(student.email ?? "");
           setPhone(student.phone ?? "");
           setAddress(student.address ?? "");
-          // setStatus(student.status ?? "active");
+          setStatus(student.status ?? "");
         }
       } catch (err) {
         console.error("Error loading student", err);
       } finally {
-        if (isMounted) setLoading(false);
+        setLoading(false);
       }
     };
 
     loadStudent();
-    return () => { isMounted = false; };
-  }, [id, isUpdate]);
+  }, [id]);
+
+
+
+
 
   const handleSubmit = async () => {
     if (!user?.uid) {
@@ -100,7 +103,11 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
     setName(""); setEmail(""); setPhone(""); setAddress(""); setStatus("active");
   };
 
-  if (loading && isUpdate) {
+
+
+
+
+  if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-gray-50">
         <ActivityIndicator size="large" color="#6E62FF" />
@@ -111,7 +118,7 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
 
   return (
     <View className="flex-1 bg-gray-50">
-      <Header title={isUpdate ? "Update Student" : "Add Student"} />
+      <Header title={ isNew ? "Update Student" : "Add Student"} />
       <KeyboardAvoidingView
         className="flex-1"
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -208,8 +215,8 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
               >
                 {loading ? <ActivityIndicator color="white" size="small" /> : (
                   <>
-                    <MaterialIcons name={isUpdate ? "update" : "add"} color="white" size={20} />
-                    <Text className="text-white font-semibold ml-2">{isUpdate ? "Update Student" : "Add Student"}</Text>
+                    <MaterialIcons name={isNew ? "system-update-alt" : "add"} color="white" size={20} />
+                    <Text className="text-white font-semibold ml-2">{!isNew ? "Update Student" : "Add Student"}</Text>
                   </>
                 )}
               </TouchableOpacity>
@@ -222,6 +229,4 @@ const AddUpdateStudent = ({ isUpdate = false }) => {
   );
 };
 
-export const AddStudent = () => <AddUpdateStudent isUpdate={false} />;
-export const UpdateStudent = () => <AddUpdateStudent isUpdate={true} />;
-export default AddStudent;
+export default AddUpdateStudent;

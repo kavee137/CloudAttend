@@ -55,7 +55,7 @@ export const registerStudentInFirestore = async (student: Student, instituteName
 
 
 // Get student by ID
-export const getStudent = async (id: string): Promise<Student | null> => {
+export const getStudent = async (id: string) => {
   const docRef = doc(db, "students", id);
   const snapshot = await getDoc(docRef);
   if (!snapshot.exists()) return null;
@@ -71,7 +71,9 @@ export const updateStudent = async (id: string, updated: Partial<Student>) => {
 // Delete student
 export const deleteStudent = async (id: string) => {
   const docRef = doc(db, "students", id);
-  await deleteDoc(docRef);
+  await updateDoc(docRef, {
+    status: "inactive"
+  });
 };
 
 // Get all students

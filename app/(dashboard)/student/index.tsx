@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, TextInput, Image, Alert, Acti
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'expo-router'
 import { MaterialIcons } from '@expo/vector-icons'
-import { getAllStudents, getStudentsByInstitute, studentsRef,  } from '@/services/studentService'
+import { deleteStudent, getAllStudents, getStudentsByInstitute, studentsRef,  } from '@/services/studentService'
 import { Student } from '@/types/student'
 import { useAuth } from '@/context/AuthContext' // assuming you have AuthContext for logged-in user
 import { collection, onSnapshot, query, where } from 'firebase/firestore'
@@ -58,9 +58,42 @@ const StudentPage = () => {
     }
   }
 
+
+  // Handle student deletion with confirmation
+  const handleDelete = (studentId: string) => {
+    Alert.alert(
+      "Confirm Delete",
+      "Are you sure you want to delete this student? This action cannot be undone.",
+      [
+        { text: "Cancel", style: "cancel" },
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: async () => {
+            try {
+              setLoading(true);
+              await deleteStudent(studentId);
+              Alert.alert("Deleted", "Student has been deleted.");
+            } catch (err) {
+              console.error("Error deleting student:", err);
+              Alert.alert("Error", "Failed to delete student. Please try again later.");
+            } finally {
+              setLoading(false);
+            }
+          },
+        },
+      ]
+    );
+  }
+
+
+
+
   useEffect(() => {
     fetchStudents()
   }, [user?.uid])
+
+  
 
   // Filter students based on search query
   const filteredStudents = students.filter(student =>
@@ -113,7 +146,7 @@ const StudentPage = () => {
       </View>
 
       {/* Students List */}
-      <ScrollView className="flex-1 px-4" showsVerticalScrollIndicator={false}>
+      <ScrollView className="flex-1 px-4 mb-20" showsVerticalScrollIndicator={false}>
         {loading ? (
           <View className="flex-1 justify-center items-center py-20">
             <ActivityIndicator size="large" color="#6E62FF" />
@@ -138,7 +171,7 @@ const StudentPage = () => {
                 <View className="flex-row items-center">
                   {/* Student Avatar */}
                   <Image
-                    source={{ uri: 'https://via.placeholder.com/150' }} // Placeholder image
+                    source={{ uri: "https://img.freepik.com/free-vector/user-blue-gradient_78370-4692.jpg?semt=ais_hybrid&w=740" }}
                     className="w-16 h-16 rounded-full"
                     resizeMode="cover"
                   />
@@ -175,13 +208,20 @@ const StudentPage = () => {
                         {student.phone}
                       </Text>
                     </View>
+                    <View className="flex-row items-center">
+                      <MaterialIcons name="location-pin" color="#9CA3AF" size={14} />
+                      <Text className="text-xs text-gray-500 ml-1 flex-1" numberOfLines={1}>
+                        {student.address}
+                      </Text>
+                    </View>
+                    
                   </View>
                 </View>
 
                 {/* Action Buttons */}
                 <View className="flex-row justify-end mt-4 pt-3 border-t border-gray-100">
                   <TouchableOpacity
-                    onPress={() => router.push(`/(dashboard)/student/edit-student?id=${student.id}`)}
+                    onPress={() => router.push(`/(dashboard)/student/${student.id}`)}
                     className="flex-row items-center bg-blue-50 px-4 py-2 rounded-lg mr-2"
                   >
                     <MaterialIcons name="edit" color="#3B82F6" size={16} />
@@ -189,7 +229,7 @@ const StudentPage = () => {
                   </TouchableOpacity>
 
                   <TouchableOpacity
-                    onPress={() => Alert.alert('Delete', 'Delete student functionality')}
+                    onPress={() => { handleDelete(student.id!) }}
                     className="flex-row items-center bg-red-50 px-4 py-2 rounded-lg"
                   >
                     <MaterialIcons name="delete" color="#EF4444" size={16} />
