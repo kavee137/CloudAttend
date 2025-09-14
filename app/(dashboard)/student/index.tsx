@@ -137,7 +137,7 @@ const StudentPage = () => {
       {/* Add Student Button */}
       <View className="px-4 py-4">
         <TouchableOpacity 
-          onPress={() => router.push("/(dashboard)/student/add-student")}
+          onPress={() => router.push("/(dashboard)/student/new")}
           className="bg-[#6E62FF] rounded-lg py-4 flex-row items-center justify-center shadow-sm"
         >
           <MaterialIcons name="add" color="white" size={24} />
