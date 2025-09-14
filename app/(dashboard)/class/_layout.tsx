@@ -5,6 +5,7 @@ const TaskLayout = () => {
   return <Stack screenOptions={{ animation: "slide_from_right" }}>
     <Stack.Screen name="index" options={{ headerShown: false}}/>
     <Stack.Screen name="[id]" options={{ headerShown: false}}/>
+    <Stack.Screen name="[id]students" options={{ headerShown: false}}/>
   </Stack>
 }
 

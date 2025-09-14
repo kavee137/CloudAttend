@@ -14,15 +14,12 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useAuth } from '@/context/AuthContext';
 import { getTeachersByInstitute } from '@/services/teacherService';
-import { getClassesByTeacher, deleteClass } from '@/services/classService';
+import { deleteClass } from '@/services/classService';
 import Header from '@/components/header';
 import { collection, onSnapshot, query, where } from '@firebase/firestore';
 import { db } from '@/firebase';
 import { Class } from '@/types/class';
 import { Teacher } from '@/types/teacher';
-
-// Define interfaces
-
 
 const ClassManagement = () => {
   const router = useRouter();
@@ -37,93 +34,56 @@ const ClassManagement = () => {
   const [classesLoading, setClassesLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
 
-
-
-
-
-
-  // Real time update teachers
+  // Real time update classes when teacher is selected
   useEffect(() => {
-    if (!selectedTeacher?.id) return
+    if (!selectedTeacher?.id) {
+      setClasses([]);
+      return;
+    }
 
+    setClassesLoading(true);
     const q = query(
       collection(db, "classes"),
-      where("teacherId", "==", selectedTeacher?.id)
-    )
+      where("teacherId", "==", selectedTeacher.id),
+      where("status", "==", "active")
+    );
 
     const unsubscribe = onSnapshot(
       q,
       (snapshot) => {
         const allClasses = snapshot.docs.map(
           (doc) => ({ id: doc.id, ...doc.data() }) as Class
-        )
-        setClasses(allClasses)
-        setClassesLoading(false)
+        );
+        setClasses(allClasses);
+        setClassesLoading(false);
       },
       (err) => {
-        console.error("Error fetching classes:", err)
-        setClassesLoading(false)
+        console.error("Error fetching classes:", err);
+        setClassesLoading(false);
+        Alert.alert('Error', 'Failed to load classes in real-time');
       }
-    )
+    );
 
-    return () => unsubscribe()
-  }, [selectedTeacher?.id])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    return () => unsubscribe();
+  }, [selectedTeacher?.id]);
 
   // Load teachers when component mounts
   useEffect(() => {
     loadTeachers();
   }, []);
 
-  // // Load classes when teacher is selected
-  // useEffect(() => {
-  //   if (selectedTeacher) {
-  //     loadTeacherClasses(selectedTeacher.id);
-  //   } else {
-  //     setClasses([]);
-  //   }
-  // }, [selectedTeacher]);
-
   const loadTeachers = async () => {
     if (!user?.uid) return;
 
     try {
       setTeachersLoading(true);
-
       const teachersList = await getTeachersByInstitute(user.uid);
-      setTeachers(teachersList.filter(teacher => teacher.status?.toLowerCase() === 'active'))
-
+      setTeachers(teachersList.filter(teacher => teacher.status?.toLowerCase() === 'active'));
     } catch (error) {
       console.error('Error fetching teachers:', error);
       Alert.alert('Error', 'Failed to load teachers. Please try again.');
     } finally {
       setTeachersLoading(false);
-    }
-  };
-
-  const loadTeacherClasses = async (teacherId: string) => {
-    try {
-      setClassesLoading(true);
-      const teacherClasses = await getClassesByTeacher(teacherId);
-      setClasses(teacherClasses.filter(cls => cls.status === 'active'));
-    } catch (error) {
-      console.error('Error fetching classes:', error);
-      Alert.alert('Error', 'Failed to load classes. Please try again.');
-    } finally {
-      setClassesLoading(false);
     }
   };
 
@@ -140,11 +100,19 @@ const ClassManagement = () => {
     router.push(`/class/new?teacherId=${selectedTeacher.id}`);
   };
 
-  const handleEditClass = (classItem: Class) => {
+  const handleClassPress = (classItem: Class) => {
+    // Navigate to class students page
+    router.push(`/(dashboard)/class/${classItem.id}/students`);
+    // router.push(`/class/${classItem.id}/students`);
+  };
+
+  const handleEditClass = (classItem: Class, event: any) => {
+    event.stopPropagation(); // Prevent card press event
     router.push(`/class/${classItem.id}`);
   };
 
-  const handleDeleteClass = async (classItem: Class) => {
+  const handleDeleteClass = async (classItem: Class, event: any) => {
+    event.stopPropagation(); // Prevent card press event
     Alert.alert(
       'Delete Class',
       `Are you sure you want to delete "${classItem.name}"?`,
@@ -157,11 +125,6 @@ const ClassManagement = () => {
             try {
               await deleteClass(classItem.id!);
               Alert.alert('Success', 'Class deleted successfully');
-              if (selectedTeacher) {
-                if (typeof selectedTeacher.id === 'string') {
-                  await loadTeacherClasses(selectedTeacher.id);
-                }
-              }
             } catch (error) {
               console.error('Error deleting class:', error);
               Alert.alert('Error', 'Failed to delete class');
@@ -175,11 +138,6 @@ const ClassManagement = () => {
   const onRefresh = async () => {
     setRefreshing(true);
     await loadTeachers();
-    if (selectedTeacher) {
-      if (typeof selectedTeacher.id === 'string') {
-        await loadTeacherClasses(selectedTeacher.id);
-      }
-    }
     setRefreshing(false);
   };
 
@@ -190,7 +148,6 @@ const ClassManagement = () => {
     >
       <View className="flex-1">
         <Text className="text-base font-semibold text-gray-900 mb-1">{item.name}</Text>
-
         {item.email && (
           <Text className="text-xs text-gray-500">{item.email}</Text>
         )}
@@ -202,36 +159,54 @@ const ClassManagement = () => {
   );
 
   const renderClassItem = ({ item }: { item: Class }) => (
-    <View className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100">
-      <View className="flex-row items-center justify-between mb-3">
+    <TouchableOpacity
+      className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100 active:bg-gray-50"
+      onPress={() => handleClassPress(item)}
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-center justify-between">
         <View className="flex-1">
-          <Text className="text-lg font-semibold text-gray-900 mb-1">{item.name}</Text>
-          <View className="flex-row items-center">
-            <View className={`px-2 py-1 rounded-full ${item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
+          <View className="flex-row items-center mb-2">
+            <View className="bg-blue-100 rounded-full p-2 mr-3">
+              <MaterialIcons name="school" size={18} color="#3B82F6" />
+            </View>
+            <Text className="text-lg font-semibold text-gray-900">{item.name}</Text>
+          </View>
+          
+          <View className="flex-row items-center mb-2">
+            <View className={`px-2 py-1 rounded-full ${
+              item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
+            }`}>
+              <Text className={`text-xs font-medium ${
+                item.status === 'active' ? 'text-green-700' : 'text-red-700'
               }`}>
-              <Text className={`text-xs font-medium ${item.status === 'active' ? 'text-green-700' : 'text-red-700'
-                }`}>
                 {item.status.toUpperCase()}
               </Text>
             </View>
           </View>
+
+          <View className="flex-row items-center">
+            <MaterialIcons name="people" size={16} color="#6B7280" />
+            <Text className="text-sm text-gray-600 ml-1">Tap to manage students</Text>
+          </View>
         </View>
-        <View className="flex-row space-x-2">
+
+        <View className="flex-row items-center space-x-2">
           <TouchableOpacity
-            onPress={() => handleEditClass(item)}
-            className="bg-blue-500 rounded-lg p-2 mr-2"
+            onPress={(e) => handleEditClass(item, e)}
+            className="bg-blue-500 rounded-lg p-2"
           >
             <MaterialIcons name="edit" size={18} color="white" />
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => handleDeleteClass(item)}
+            onPress={(e) => handleDeleteClass(item, e)}
             className="bg-red-500 rounded-lg p-2"
           >
             <MaterialIcons name="delete" size={18} color="white" />
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -259,11 +234,11 @@ const ClassManagement = () => {
                   <MaterialIcons name="person" size={24} color="#3B82F6" />
                 </View>
                 <View className="flex-1">
-                  <Text className={`text-base font-medium ${selectedTeacher ? 'text-gray-900' : 'text-gray-500'
-                    }`}>
+                  <Text className={`text-base font-medium ${
+                    selectedTeacher ? 'text-gray-900' : 'text-gray-500'
+                  }`}>
                     {selectedTeacher ? selectedTeacher.name : 'Choose a teacher'}
                   </Text>
-
                 </View>
               </View>
               <View className="ml-2">
