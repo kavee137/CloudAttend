@@ -1,33 +1,31 @@
-import React, { useState, useEffect, useLayoutEffect } from 'react';
+import Header from '@/components/header';
+import { useAuth } from '@/context/AuthContext';
+import { db } from '@/firebase';
+import { getClassById } from '@/services/classService';
 import {
-  View,
-  Text,
-  TouchableOpacity,
-  FlatList,
+  bulkAssignStudentsToClass,
+  getClassStudentStats,
+  getUnassignedStudentsForClass,
+  removeStudentFromClass
+} from '@/services/classStudentService';
+import { getTeacher } from '@/services/teacherService';
+import { MaterialIcons } from '@expo/vector-icons';
+import { collection, doc as firestoreDoc, getDoc, onSnapshot, query, where } from '@firebase/firestore';
+import { useNavigation } from '@react-navigation/native';
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
+import {
   ActivityIndicator,
   Alert,
-  ScrollView,
-  RefreshControl,
+  FlatList,
   Modal,
-  TextInput
+  RefreshControl,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View
 } from 'react-native';
-import { MaterialIcons } from '@expo/vector-icons';
-import { useRouter, useLocalSearchParams } from 'expo-router';
-import { useAuth } from '@/context/AuthContext';
-import { getClassById } from '@/services/classService';
-import { getTeacher } from '@/services/teacherService';
-import { 
-  getStudentsByClass, 
-  getUnassignedStudentsForClass,
-  assignStudentToClass,
-  removeStudentFromClass,
-  bulkAssignStudentsToClass,
-  getClassStudentStats
-} from '@/services/classStudentService';
-import Header from '@/components/header';
-import { collection, onSnapshot, query, where, doc as firestoreDoc, getDoc } from '@firebase/firestore';
-import { db } from '@/firebase';
-import { useNavigation } from '@react-navigation/native';
 
 interface Student {
   id: string;
