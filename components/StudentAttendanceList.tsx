@@ -124,7 +124,7 @@ const StudentAttendanceList: React.FC<StudentAttendanceListProps> = ({
         </View>
 
         {/* Attendance Record Info */}
-        {record && record.markedAt && (
+        {/* {record && record.markedAt && (
           <View className="bg-white rounded-lg p-3 mb-3">
             <View className="flex-row items-center justify-between">
               <View className="flex-row items-center">
@@ -146,7 +146,7 @@ const StudentAttendanceList: React.FC<StudentAttendanceListProps> = ({
               </View>
             </View>
           </View>
-        )}
+        )} */}
 
         {/* Session Inactive Message */}
         {!sessionActive && (

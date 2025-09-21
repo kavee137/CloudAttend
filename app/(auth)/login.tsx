@@ -10,10 +10,8 @@ import {
     View,
 } from "react-native";
 import { useRouter } from "expo-router";
-import FlashMessage, { showMessage } from "react-native-flash-message";
 import { login } from "@/services/authService";
 import CustomAlert from "@/components/alert"; // import your custom alert
-import OTPTextInput from "react-native-otp-textinput";
 
 const Login = () => {
     const router = useRouter();
@@ -111,8 +109,6 @@ const Login = () => {
                         <Text className="text-primary">Register</Text>
                     </Text>
                 </Pressable>
-
-                <FlashMessage position="top" />
 
                 {/* Custom Alert */}
                 <CustomAlert

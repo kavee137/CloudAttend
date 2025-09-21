@@ -39,7 +39,7 @@ const AttendanceSessionScreen = () => {
     const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-    
+
     const [sessionTimer, setSessionTimer] = useState<string>('00:00');
 
     useEffect(() => {
@@ -185,8 +185,11 @@ const AttendanceSessionScreen = () => {
     };
 
     const handleViewHistory = () => {
-        router.push(`../history/${classId}`);
-    };
+        // router.push({
+        //     pathname: "/(dashboard)/attendance/history/[classId]",
+        //     params: { classId: classId },
+        // })
+    }
 
     if (!classData) {
         return (
@@ -334,7 +337,7 @@ const AttendanceSessionScreen = () => {
                 </View>
             </ScrollView>
 
-           
+
         </View>
     );
 };
