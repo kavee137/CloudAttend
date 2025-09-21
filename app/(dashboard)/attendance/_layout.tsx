@@ -5,7 +5,8 @@ import { Stack } from "expo-router"
 const AttendanceLayout = () => {
   return <Stack screenOptions={{ animation: "slide_from_right" }}>
     <Stack.Screen name="index" options={{ headerShown: false}}/>
-    <Stack.Screen name="scanner" options={{ headerShown: false}}/>
+    {/* <Stack.Screen name="scanner" options={{ headerShown: false}}/> */}
+    <Stack.Screen name="session" options={{ headerShown: false}}/>
   </Stack>
 }
 

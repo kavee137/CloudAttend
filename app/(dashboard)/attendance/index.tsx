@@ -154,63 +154,64 @@ const AttendanceManagement = () => {
     </TouchableOpacity>
   );
 
-  
-const renderClassItem = ({ item }: { item: Class }) => (
-  <TouchableOpacity
-    className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100 active:bg-gray-50"
-    onPress={() => handleClassPress(item)} // Add this line
-    activeOpacity={0.7}
-  >
-    <View className="flex-row items-center justify-between">
-      <View className="flex-1">
-        <View className="flex-row items-center mb-2">
-          <View className="bg-blue-100 rounded-full p-2 mr-3">
-            <MaterialIcons name="school" size={18} color="#3B82F6" />
+
+  const renderClassItem = ({ item }: { item: Class }) => (
+    <TouchableOpacity
+      className="bg-white rounded-xl p-4 mb-3 shadow-sm border border-gray-100 active:bg-gray-50"
+      onPress={() => handleClassPress(item)} // Add this line
+      activeOpacity={0.7}
+    >
+      <View className="flex-row items-center justify-between">
+        <View className="flex-1">
+          <View className="flex-row items-center mb-2">
+            <View className="bg-blue-100 rounded-full p-2 mr-3">
+              <MaterialIcons name="school" size={18} color="#3B82F6" />
+            </View>
+            <Text className="text-lg font-semibold text-gray-900">{item.name}</Text>
           </View>
-          <Text className="text-lg font-semibold text-gray-900">{item.name}</Text>
-        </View>
-        
-        <View className="flex-row items-center mb-2">
-          <View className={`px-2 py-1 rounded-full ${
-            item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
-          }`}>
-            <Text className={`text-xs font-medium ${
-              item.status === 'active' ? 'text-green-700' : 'text-red-700'
-            }`}>
-              {item.status.toUpperCase()}
-            </Text>
+
+          <View className="flex-row items-center mb-2">
+            <View className={`px-2 py-1 rounded-full ${item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
+              }`}>
+              <Text className={`text-xs font-medium ${item.status === 'active' ? 'text-green-700' : 'text-red-700'
+                }`}>
+                {item.status.toUpperCase()}
+              </Text>
+            </View>
+          </View>
+
+          <View className="flex-row items-center">
+            <MaterialIcons name="people" size={16} color="#6B7280" />
+            <Text className="text-sm text-gray-600 ml-1">Tap to manage attendance</Text>
           </View>
         </View>
 
-        <View className="flex-row items-center">
-          <MaterialIcons name="people" size={16} color="#6B7280" />
-          <Text className="text-sm text-gray-600 ml-1">Tap to manage attendance</Text>
+        {/* Quick Action Buttons */}
+        <View className="flex-row space-x-2">
+          <TouchableOpacity
+            onPress={(event) => handleEditClass(item, event)}
+            className="bg-blue-100 rounded-full p-2"
+          >
+            <MaterialIcons name="edit" size={16} color="#3B82F6" />
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={(event) => handleDeleteClass(item, event)}
+            className="bg-red-100 rounded-full p-2"
+          >
+            <MaterialIcons name="delete" size={16} color="#EF4444" />
+          </TouchableOpacity>
         </View>
       </View>
+    </TouchableOpacity>
+  );
 
-      {/* Quick Action Buttons */}
-      <View className="flex-row space-x-2">
-        <TouchableOpacity
-          onPress={(event) => handleEditClass(item, event)}
-          className="bg-blue-100 rounded-full p-2"
-        >
-          <MaterialIcons name="edit" size={16} color="#3B82F6" />
-        </TouchableOpacity>
-        
-        <TouchableOpacity
-          onPress={(event) => handleDeleteClass(item, event)}
-          className="bg-red-100 rounded-full p-2"
-        >
-          <MaterialIcons name="delete" size={16} color="#EF4444" />
-        </TouchableOpacity>
-      </View>
-    </View>
-  </TouchableOpacity>
-);
-
-const handleClassPress = (classItem: Class) => {
-  router.push(`../attendance/session/${classItem.id}`);
-};
+  const handleClassPress = (classItem: Class) => {
+    router.push({
+      pathname: "../attendance/session",
+      params: { classId: classItem.id }
+    })
+  };
 
   return (
     <View className="flex-1 bg-gray-50">
@@ -237,9 +238,8 @@ const handleClassPress = (classItem: Class) => {
                   <MaterialIcons name="person" size={24} color="#3B82F6" />
                 </View>
                 <View className="flex-1">
-                  <Text className={`text-base font-medium ${
-                    selectedTeacher ? 'text-gray-900' : 'text-gray-500'
-                  }`}>
+                  <Text className={`text-base font-medium ${selectedTeacher ? 'text-gray-900' : 'text-gray-500'
+                    }`}>
                     {selectedTeacher ? selectedTeacher.name : 'Choose a teacher'}
                   </Text>
                 </View>

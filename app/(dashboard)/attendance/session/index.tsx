@@ -39,7 +39,7 @@ const AttendanceSessionScreen = () => {
     const [attendanceRecords, setAttendanceRecords] = useState<AttendanceRecord[]>([]);
     const [loading, setLoading] = useState(false);
     const [refreshing, setRefreshing] = useState(false);
-    const [showQRModal, setShowQRModal] = useState(false);
+    
     const [sessionTimer, setSessionTimer] = useState<string>('00:00');
 
     useEffect(() => {
@@ -198,7 +198,7 @@ const AttendanceSessionScreen = () => {
     }
 
     return (
-        <View className="flex-1 bg-gray-50">
+        <View className="flex-1 bg-gray-50 pb-32">
             <Header
                 title="Attendance Session"
             />
@@ -260,14 +260,6 @@ const AttendanceSessionScreen = () => {
                             ) : (
                                 <>
                                     <TouchableOpacity
-                                        onPress={() => setShowQRModal(true)}
-                                        className="flex-1 bg-green-500 rounded-xl py-4 flex-row items-center justify-center"
-                                    >
-                                        <MaterialIcons name="qr-code" size={20} color="white" />
-                                        <Text className="text-white font-semibold ml-2">Show QR</Text>
-                                    </TouchableOpacity>
-
-                                    <TouchableOpacity
                                         onPress={handleEndSession}
                                         disabled={loading}
                                         className="flex-1 bg-red-500 rounded-xl py-4 flex-row items-center justify-center"
@@ -300,11 +292,14 @@ const AttendanceSessionScreen = () => {
                             </TouchableOpacity>
 
                             <TouchableOpacity
-                                onPress={() => router.push('../scanner')}
+                                onPress={() => router.push({
+                                    pathname: "/(dashboard)/attendance/session/scanner",
+                                    params: { classId: classId, sessionId: activeSession?.id },
+                                })}
                                 disabled={!activeSession}
                                 className={`flex-1 rounded-xl py-4 flex-row items-center justify-center ${activeSession
-                                        ? 'bg-purple-500'
-                                        : 'bg-gray-200'
+                                    ? 'bg-purple-500'
+                                    : 'bg-gray-200'
                                     }`}
                             >
                                 <MaterialIcons
@@ -339,39 +334,7 @@ const AttendanceSessionScreen = () => {
                 </View>
             </ScrollView>
 
-            {/* QR Code Modal */}
-            <Modal
-                visible={showQRModal}
-                transparent
-                animationType="slide"
-                onRequestClose={() => setShowQRModal(false)}
-            >
-                <View className="flex-1 bg-black/50 justify-center items-center px-4">
-                    <View className="bg-white rounded-2xl p-6 w-full max-w-sm">
-                        <View className="flex-row items-center justify-between mb-6">
-                            <Text className="text-xl font-bold text-gray-900">QR Code</Text>
-                            <TouchableOpacity
-                                onPress={() => setShowQRModal(false)}
-                                className="bg-gray-100 rounded-full p-2"
-                            >
-                                <MaterialIcons name="close" size={24} color="#666" />
-                            </TouchableOpacity>
-                        </View>
-
-                        {activeSession && (
-                            <QRCodeGenerator
-                                sessionId={activeSession.id}
-                                classId={classId as string}
-                                onExpired={() => setShowQRModal(false)}
-                            />
-                        )}
-
-                        <Text className="text-center text-gray-600 text-sm mt-4">
-                            Students can scan this QR code to mark their attendance
-                        </Text>
-                    </View>
-                </View>
-            </Modal>
+           
         </View>
     );
 };

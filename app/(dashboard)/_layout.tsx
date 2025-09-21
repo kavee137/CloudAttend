@@ -39,7 +39,7 @@ const DashboardLayout = () => {
       margin: 16,
       left: 0,
       right: 0,
-      bottom: 10,
+      bottom: 25,
       borderTopWidth: 0,
       shadowColor: "#000",
       shadowOffset: { width: 0, height: 8 },

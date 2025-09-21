@@ -8,8 +8,6 @@ export interface AttendanceSession {
   startTime: Timestamp;
   endTime?: Timestamp;
   status: 'active' | 'completed' | 'cancelled';
-  qrCode: string;
-  qrExpiry: Timestamp;
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
@@ -19,10 +17,6 @@ export interface AttendanceRecord {
   sessionId: string;
   studentId: string;
   status: 'present' | 'absent' | 'late';
-  markedAt?: Timestamp;
-  markedBy: 'qr' | 'manual' | 'auto';
-  location?: string; // GPS coordinates if available (format: "lat,lng")
-  notes?: string; // Optional notes about the attendance
   createdAt: Timestamp;
   updatedAt: Timestamp;
 }
