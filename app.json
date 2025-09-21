@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "CloudAttend",
+    "name": "Cloud Attend",
     "slug": "CloudAttend",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/appImages/app-icon.png",
     "scheme": "cloudattend",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -12,11 +12,21 @@
       "supportsTablet": true
     },
     "android": {
+      
+      "compileSdkVersion": 36,
+      "targetSdkVersion": 36,
+      "buildToolsVersion": "36.0.0",
+
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.kavee137.CloudAttend"
     },
     "web": {
       "bundler": "metro",
@@ -33,10 +43,23 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
+      ],
+      "expo-camera",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Allow CloudAttend camera permission to access your camera."
+        }
       ]
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "ebcc870f-44a5-4b0e-896a-51cef22075b6"
+      }
     }
   }
 }

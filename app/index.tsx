@@ -27,5 +27,3 @@ const Index = () => {
 }
 
 export default Index
-
-// ඊයෙ වැඩ කරලා අද ලැප් එක ඔන් කරද්දී ප්‍රොජෙක්ට් එක වැඩ නෑ...app folder eka athule thiyena index file eka detect kr gnn bari seen ekak kiyanne. kata hari mehema wela hdpu kenek innwad

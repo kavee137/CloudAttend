@@ -61,7 +61,7 @@ const Home = () => {
 
   return (
     <View className="flex-1 bg-white">
-      <StatusBar barStyle="dark-content" backgroundColor="red" />
+      <StatusBar barStyle="dark-content" backgroundColor="white" />
 
       {/* Header Section */}
       <View className="p-4 border-b border-gray-100 flex-row justify-between items-center">

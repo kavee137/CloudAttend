@@ -1,50 +1,100 @@
-# Welcome to your Expo app 👋
+# 📌 Attendance App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An attendance management system built with **React Native (Expo)** and **Firebase**, featuring QR code scanning, real-time updates, and secure authentication.
 
-## Get started
+---
 
-1. Install dependencies
+## 🚀 Features
+
+* 🔑 **User Authentication** – Sign up, login, and logout with Firebase Auth
+* 📷 **QR Code Scanner** – Mark attendance quickly by scanning class-specific QR codes
+* ☁️ **Cloud Integration** – Firebase Firestore for real-time data storage
+* ☁️ **Teacher, Student, Class, Attendance** – CRUD operation done
+
+---
+
+## 🛠️ Tech Stack
+
+* **Frontend:** React Native (Expo)
+* **Navigation:** Expo Router
+* **Authentication:** Firebase Auth
+* **Database & Storage:** Firebase Firestore & Storage
+* **QR Code Scanning:** Expo Camera
+
+---
+
+## 📂 Project Structure
+
+```
+attendance-app/
+│── app/                 # App screens & routes
+│   ├── (auth)/          # Login & Signup
+│   ├── (dashboard)/     # Student & Admin dashboards
+│   └── ...
+│── context/             # Auth & global context
+│── services/            # Firebase & API services
+│── components/          # Reusable UI components
+│── assets/              # Images, icons, etc.
+│── package.json
+│── README.md
+```
+
+---
+
+## ⚙️ Installation & Setup
+
+1. **Clone the repository**
+
+   ```bash
+   git clone https://github.com/kavee137/CloudAttend/tree/recover-yesterday
+   cd attendance-app
+   ```
+
+2. **Install dependencies**
 
    ```bash
    npm install
+   # or
+   yarn install
    ```
 
-2. Start the app
+3. **Configure Firebase**
+
+   * Create a Firebase project in [Firebase Console](https://console.firebase.google.com/)
+   * Enable **Authentication**, **Firestore**, and **Storage**
+   * Add your Firebase config to `.env` file:
+
+     ```env
+      EXPO_PUBLIC_EMAILJS_SERVICE_ID=
+      EXPO_PUBLIC_EMAILJS_TEMPLATE_ID=
+      EXPO_PUBLIC_EMAILJS_PUBLIC_KEY=
+     ```
+
+4. **Run the project**
 
    ```bash
    npx expo start
    ```
 
-In the output, you'll find options to open the app in a
+---
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## 📸 Screenshots
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+| Login Screen                           | Dashboard                                      | QR Scanner                              |
+| -------------------------------------- | ---------------------------------------------- | --------------------------------------- |
+| ![Login](assets/screenshots/login.png) | ![Dashboard](assets/screenshots/dashboard.png) | ![QR](assets/screenshots/qrscanner.png) |
 
-## Get a fresh project
+---
 
-When you're ready, run:
+## 👨‍💻 YT video
+https://youtu.be/qg0ZvAOr_gk
 
-```bash
-npm run reset-project
-```
+## 👨‍💻 Contributing
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Contributions are welcome! Please fork this repo and submit a PR for any improvements.
 
-## Learn more
+---
 
-To learn more about developing your project with Expo, look at the following resources:
+## 📜 License
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This project is licensed under the **MIT License**.
