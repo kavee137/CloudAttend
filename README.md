@@ -87,7 +87,7 @@ attendance-app/
 ---
 
 ## 👨‍💻 YT video
-https://youtu.be/qg0ZvAOr_gk
+https://youtu.be/5EpLB3gHUPw
 
 ## 👨‍💻 Contributing
 
