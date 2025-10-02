@@ -52,7 +52,6 @@ const Login = () => {
             router.push("/loginSuccess");
 
         } catch (err) {
-            console.error(err);
             showAlert("Please check your email and password!");
         } finally {
             setIsLoading(false);

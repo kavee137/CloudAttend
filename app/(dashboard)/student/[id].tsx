@@ -134,8 +134,9 @@ const AddUpdateStudent = () => {
               <View className="flex-row items-center border border-gray-300 rounded-xl px-4 py-2">
                 <MaterialIcons name="person" size={20} color="#9CA3AF" />
                 <TextInput
-                  className="flex-1 ml-2 text-gray-800"
+                  className="flex-1 ml-2 text-gray-800 placeholder-text-gray-400"
                   placeholder="Enter full name"
+                  placeholderTextColor="#D1D5DB"
                   value={name}
                   onChangeText={setName}
                 />
@@ -157,6 +158,7 @@ const AddUpdateStudent = () => {
                   keyboardType="email-address"
                   autoCapitalize="none"
                   autoComplete="email"
+                  placeholderTextColor="#D1D5DB"
                 />
               </View>
             </View>
@@ -174,6 +176,7 @@ const AddUpdateStudent = () => {
                   value={phone}
                   onChangeText={setPhone}
                   keyboardType="phone-pad"
+                  placeholderTextColor="#D1D5DB"
                 />
               </View>
             </View>
@@ -193,6 +196,7 @@ const AddUpdateStudent = () => {
                   multiline
                   numberOfLines={3}
                   textAlignVertical="top"
+                  placeholderTextColor="#D1D5DB"
                 />
               </View>
             </View>

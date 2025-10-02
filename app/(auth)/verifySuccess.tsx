@@ -18,14 +18,14 @@ const Congratulations = () => {
       </Text>
       <Text className="text-lg text-gray-600 text-center mb-8">
         Your email has been successfully verified.  
-        You can now access your institute dashboard!
+        You can now login to your institute account!
       </Text>
 
       <TouchableOpacity
         className="bg-primary px-6 py-3 rounded-full"
-        onPress={() => router.replace("/home")}
+        onPress={() => router.replace("/login")}
       >
-        <Text className="text-white text-lg font-semibold">Go to Dashboard</Text>
+        <Text className="text-white text-lg font-semibold">Login</Text>
       </TouchableOpacity>
     </View>
   )
