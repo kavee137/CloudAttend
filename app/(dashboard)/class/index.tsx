@@ -28,11 +28,46 @@ const ClassManagement = () => {
   // State management
   const [selectedTeacher, setSelectedTeacher] = useState<Teacher | null>(null);
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
-  const [teachers, setTeachers] = useState<Teacher[]>([]);
+  const [teachers, setTeachers] = useState<any[]>([]);
   const [classes, setClasses] = useState<Class[]>([]);
   const [teachersLoading, setTeachersLoading] = useState(false);
   const [classesLoading, setClassesLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
+
+
+  // Real time update teachers list
+  useEffect(() => {
+    if (!user?.uid) return;
+
+    // Reference teachers collection
+    const q = query(
+      collection(db, "teachers"),
+      where("instituteId", "==", user.uid),
+      where("status", "==", "active") // ✅ only active teachers
+    );
+
+    // Subscribe to real-time updates
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const teachersList = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        setTeachers(teachersList);
+        setTeachersLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching teachers:", error);
+        setTeachersLoading(false);
+      }
+    );
+
+    // Cleanup listener when component unmounts
+    return () => unsubscribe();
+  }, [user?.uid]);
+
+
 
   // Real time update classes when teacher is selected
   useEffect(() => {
@@ -172,14 +207,12 @@ const ClassManagement = () => {
             </View>
             <Text className="text-lg font-semibold text-gray-900">{item.name}</Text>
           </View>
-          
+
           <View className="flex-row items-center mb-2">
-            <View className={`px-2 py-1 rounded-full ${
-              item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
-            }`}>
-              <Text className={`text-xs font-medium ${
-                item.status === 'active' ? 'text-green-700' : 'text-red-700'
+            <View className={`px-2 py-1 rounded-full ${item.status === 'active' ? 'bg-green-100' : 'bg-red-100'
               }`}>
+              <Text className={`text-xs font-medium ${item.status === 'active' ? 'text-green-700' : 'text-red-700'
+                }`}>
                 {item.status.toUpperCase()}
               </Text>
             </View>
@@ -234,9 +267,8 @@ const ClassManagement = () => {
                   <MaterialIcons name="person" size={24} color="#3B82F6" />
                 </View>
                 <View className="flex-1">
-                  <Text className={`text-base font-medium ${
-                    selectedTeacher ? 'text-gray-900' : 'text-gray-500'
-                  }`}>
+                  <Text className={`text-base font-medium ${selectedTeacher ? 'text-gray-900' : 'text-gray-500'
+                    }`}>
                     {selectedTeacher ? selectedTeacher.name : 'Choose a teacher'}
                   </Text>
                 </View>
